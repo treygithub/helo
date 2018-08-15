@@ -1,6 +1,7 @@
+require ('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-require ('dotenv').config();
+const massive = require('massive');
 const app = express();
 
 //Controllers in routes folder / RELATIVE PATH
@@ -12,6 +13,11 @@ app.get( '/api/fetchListings', controllers.getAll );
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//DB connection
+massive( process.env.CONNECTION_STRING ).then( dbInstance => {
+  app.set('db', dbInstance)
+} ).catch(err => console.log(err));
 
 //My Error Message .Catch all
 app.use((req,res,next)=>{

@@ -1,7 +1,8 @@
 import React from 'react'
 
-const Nav = () => {
-    return ( <div>Nav</div> );
+const Auth = (props) => {
+console.log(props)
+    return ( <div>Auth</div> );
 }
  
-export default Nav;
+export default Auth;

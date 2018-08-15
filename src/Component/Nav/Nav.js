@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
+import {withRouter} from 'react-router-dom';
 class Nav extends Component {
-    state = {  }
+  
+
+
     render() { 
+        
         return ( 
         
         <div>
-            Nav
+           {this.props.location.pathname !== '/'&&<nav>NAVBAR</nav>} 
         </div>
      );
     }
 }
  
-export default Nav;
+export default withRouter(Nav);
