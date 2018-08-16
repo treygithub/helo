@@ -8,7 +8,8 @@ const app = express();
 const controllers = require('./controller');
 
 //End Points
-app.get( '/api/fetchListings', controllers.getAll );
+app.get( '/api/fetchAllTheThings', controllers.getAll );
+app.post('api/postAllTheThings', controllers.postNew)
 
 // Body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
