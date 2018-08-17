@@ -11,15 +11,29 @@ getAll: ( req, res ) => {
           },
 
 postNew: ( req, res ) => {
+  console.log('hit post req')
+  console.log(req.app)
   const dbInstance = req.app.set('db');
-  const {name, address, city, state, zipcode, image_url, mortgage, rent } = req.body;
-  dbInstance.postNewQuery([name, address, city, state, zipcode, image_url, mortgage, rent])
-  .then ( payload => res.status(200).json( payload ) )
+  const {userName,password } = req.body;
+
+  dbInstance.postNewQuery([userName, password])
+  .then ( payload => res.status(200).json( payload ))
   .catch (err => {
     res.status(500).send(err);
-    console.log('post req err ', err)
+    console.log( err)
   });
-}
+},
+
+deleteOne: (req, res, next) => {
+    const dbInstance = req.app.set('db');
+    const { id } = req.params;
+
+    dbInstance.deleteOne( [id] )
+    .then ( payload => {
+      res.sendStatus(500).send(err)
+      console.log('delete req err ', err);
+    });
+},
 
 }
 
