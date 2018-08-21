@@ -3,17 +3,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const massive = require('massive');
 const app = express();
+const cors=require('cors');
 
 const controllers = require('./controller');
 
 app.use(bodyParser.json());
+app.use(cors());
 
 massive( process.env.CONNECTION_STRING ).then( dbInstance => {
   app.set('db', dbInstance)
 } ).catch(err => console.log(err));
 
-// app.get( '/api/fetchAllTheThings', controllers.getAll );
-app.post("api/postAllTheThings", controllers.postNew);
+app.get( '/api/fetchAllTheThings', controllers.getAll );
+app.post( '/api/registerNewUser', controllers.postNew);
+app.post( '/api/loginCheck', controllers.loginAuthCheck);
 app.delete( '/api/deleteOneThings/:id', controllers.deleteOne );
 
 // Body parser middleware

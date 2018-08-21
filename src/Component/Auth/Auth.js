@@ -1,48 +1,80 @@
 import React, {Component} from 'react'
 import axios from 'axios';
-
+import { Redirect } from 'react-router'
 
 class Auth extends Component{
 constructor(){
     super();
-    this.state={
-        userName:'',
-        password:''
+    this.state= {
+        data: [],
+        userName: '',
+        password: '',
+        loggedIn: '',
+        myredirect:false
     }
 }
+
 handleChange = (e) => {
-    // console.log(e.target.value)
     this.setState({[e.target.name]: e.target.value})
 }
 
-postNewUser = () => {
-    //  e.preventDefault()
+postNewUser(){
     let {userName, password} = this.state
-    axios.post("api/postAllTheThings", {userName, password}).then(() => console.log('.then post res')).catch(err => console.log(err))
+    axios.post('http://localhost:4000/api/registerNewUser', {userName, password})
+    .then(res => {
+        this.setState({
+          loggedIn: res.data, myredirect:true
+        })
+      })
+    .catch(function (error) {
+        console.log(error);
+      });
 }
 
-    render(){
-    return ( 
-    <div>
+login = () => {
+    let {userName, password} = this.state
+    axios.post('http://localhost:4000/api/loginCheck', {userName, password})
+    .then(res => {
+        this.setState({
+          loggedIn: res.data[0].username, myredirect:true
+        })
+      })
+    .catch(function (error) {
+        console.log(error);
+      });
+}
 
-        <input type="text" 
-        placeholder="User Name"
-        onChange={ e => this.handleChange(e) }
-        >
-        </input>
 
-        <input type="password" 
-        placeholder="Password"
-        onChange={ e => this.handleChange(e) }
-        >
-        </input>
+render(){
+    console.log(this.state)
+if(this.state.myredirect){
+   return <Redirect push to={"/dashboard"}/>
+}
+return ( 
+<div>
 
-        <button type="submit">Login</button>
-        <button onClick={()=>this.postNewUser()} type="submit">Register</button>
+<input type="text"
+name="userName"
+placeholder="User Name"
+onChange={ e => this.handleChange(e) }
+>
+</input>
 
-    </div> 
+<input type="password"
+name="password"
+placeholder="Password"
+onChange={ e => this.handleChange(e) }
+>
+</input>
+
+<button onClick={ this.login } type="submit">Login</button>
+<button onClick={()=>this.postNewUser()} type="submit">Register</button>
+
+</div> 
 );
 }
 }
+
+
  
 export default Auth;
