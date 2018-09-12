@@ -1,38 +1,50 @@
-import axios from "axios";
-
 const initialState = {
-  username: "",
+  userName: "",
   id: "",
-  profilepic: ""
+  profilePic: ""
 };
 
-const REGISTER_USER = "REGISTER_USER";
-const LOGIN = "LOGIN";
+const REDUCER_USER_NAME = "USER_NAME";
+const REDUCER_ID = "ID";
+const REDUCER_PROFILE_PIC = "PROFILE_PIC";
 
-export function registerUser(username, password) {
-  return {
-    type: REGISTER_USER,
-    payload: axios.post("/api/registerUser", { username, password })
-  };
-}
-
-export function login(username, password) {
-  return {
-    type: LOGIN,
-    payload: axios.post("/api/login", { username, password })
-  };
-}
-
-export default function Reducer(state = initialState, action) {
+function reducer(state = initialState, action) {
   switch (action.type) {
-    case `${REGISTER_USER}_FULFILLED`:
-    case `${LOGIN}_FULFILLED`:
+    case REDUCER_USER_NAME:
+      return Object.assign(state, { userName: action.payload });
+
+    case REDUCER_ID:
       return {
         ...state,
-        username: action.payload.data,
-        id: action.payload.data
+        id: action.payload
       };
+
+    case REDUCER_PROFILE_PIC:
+      return Object.assign(state, { profilePic: action.payload });
+
     default:
       return state;
   }
 }
+
+export function reducerUserName(userName) {
+  return {
+    type: REDUCER_USER_NAME,
+    payload: userName
+  };
+}
+
+export function reducerID(id) {
+  return {
+    type: REDUCER_ID,
+    payload: id
+  };
+}
+export function reducerProfilePic(profilePic) {
+  return {
+    type: REDUCER_PROFILE_PIC,
+    payload: profilePic
+  };
+}
+
+export default reducer;

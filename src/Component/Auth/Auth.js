@@ -1,16 +1,21 @@
 import React, {Component} from 'react'
 import axios from 'axios';
-import { Redirect } from 'react-router'
+// import { Redirect } from 'react-router'
+import { connect } from "react-redux";
+// import { withRouter } from "react-router-dom";
+import {
+    reducerID,
+    reducerProfilePic,
+    reducerUserName
+  } from "../../ducks/reducer";
 
 class Auth extends Component{
-constructor(){
-    super();
+constructor(props){
+    super(props);
     this.state= {
-        data: [],
         userName: '',
         password: '',
-        loggedIn: '',
-        myredirect:false
+        loggedIn: ''
     }
 }
 
@@ -18,38 +23,40 @@ handleChange = (e) => {
     this.setState({[e.target.name]: e.target.value})
 }
 
-postNewUser(){
+postNewUser = () => {
     let {userName, password} = this.state
-    axios.post('http://localhost:4000/api/registerNewUser', {userName, password})
+    axios.post('/api/registerNewUser', {userName, password})
     .then(res => {
-        this.setState({
-          loggedIn: res.data, myredirect:true
-        })
+        this.props.reducerID(res.data[0].id);
+        this.props.reducerUserName(res.data[0].userName);
+        this.props.reducerProfilePic(res.data[0].profilePic);
+      })
+      .then(res => {
+          this.props.history.push("/dashboard")
       })
     .catch(function (error) {
         console.log(error);
       });
-}
+};
 
 login = () => {
     let {userName, password} = this.state
-    axios.post('http://localhost:4000/api/loginCheck', {userName, password})
+    axios.post('/api/loginCheck', {userName, password})
     .then(res => {
-        this.setState({
-          loggedIn: res.data[0].username, myredirect:true
-        })
+        this.props.reducerID(res.data[0].id);
+        this.props.reducerUserName(res.data[0].userName);
+        this.props.reducerProfilePic(res.data[0].profilePic);
+      })
+      .then(res => {
+          this.props.history.push("/dashboard")
       })
     .catch(function (error) {
         console.log(error);
       });
 }
 
-
 render(){
-    console.log(this.state)
-if(this.state.myredirect){
-   return <Redirect push to={"/dashboard"}/>
-}
+    console.log("props be here auth page", this.props)
 return ( 
 <div>
 
@@ -75,6 +82,6 @@ onChange={ e => this.handleChange(e) }
 }
 }
 
-
- 
-export default Auth;
+export default connect(null,
+    { reducerID, reducerProfilePic, reducerUserName }
+  )(Auth);

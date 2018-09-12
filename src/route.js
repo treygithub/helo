@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route, Link} from 'react-router-dom';
+import { Switch, Route} from 'react-router-dom';
 import Auth from './Component/Auth/Auth';
 import Dashboard from './Component/Dashboard/Dashboard';
 import Form from './Component/Form/Form';
