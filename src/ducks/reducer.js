@@ -1,6 +1,6 @@
 const initialState = {
   userName: "",
-  id: "",
+  user_id: "",
   profilePic: ""
 };
 
@@ -16,7 +16,7 @@ function reducer(state = initialState, action) {
     case REDUCER_ID:
       return {
         ...state,
-        id: action.payload
+        user_id: action.payload
       };
 
     case REDUCER_PROFILE_PIC:
@@ -27,17 +27,17 @@ function reducer(state = initialState, action) {
   }
 }
 
-export function reducerUserName(userName) {
+export function reducerUserName(username) {
   return {
     type: REDUCER_USER_NAME,
-    payload: userName
+    payload: username
   };
 }
 
-export function reducerID(id) {
+export function reducerID(user_id) {
   return {
     type: REDUCER_ID,
-    payload: id
+    payload: user_id
   };
 }
 export function reducerProfilePic(profilePic) {

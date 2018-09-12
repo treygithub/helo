@@ -15,7 +15,8 @@ constructor(props){
     this.state= {
         userName: '',
         password: '',
-        loggedIn: ''
+        loggedIn: '',
+        user_id:''
     }
 }
 
@@ -27,8 +28,8 @@ postNewUser = () => {
     let {userName, password} = this.state
     axios.post('/api/registerNewUser', {userName, password})
     .then(res => {
-        this.props.reducerID(res.data[0].id);
-        this.props.reducerUserName(res.data[0].userName);
+        this.props.reducerID(res.data[0].user_id);
+        this.props.reducerUserName(res.data[0].username);
         this.props.reducerProfilePic(res.data[0].profilePic);
       })
       .then(res => {
@@ -43,8 +44,8 @@ login = () => {
     let {userName, password} = this.state
     axios.post('/api/loginCheck', {userName, password})
     .then(res => {
-        this.props.reducerID(res.data[0].id);
-        this.props.reducerUserName(res.data[0].userName);
+        this.props.reducerID(res.data[0].user_id);
+        this.props.reducerUserName(res.data[0].username);
         this.props.reducerProfilePic(res.data[0].profilePic);
       })
       .then(res => {
@@ -56,7 +57,7 @@ login = () => {
 }
 
 render(){
-    console.log("props be here auth page", this.props)
+    console.log("state be here auth page", this.state)
 return ( 
 <div>
 

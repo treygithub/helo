@@ -4,27 +4,10 @@ import { connect } from 'react-redux';
 // import axios from "axios";
 
 class Nav extends Component {
-    constructor() {
-        super();
-        this.state = {
-          userId: "",
-          userName: "",
-          id:"",
-          profilePic:""
-        };
-      }
-    
-    // componentDidMount() {
-    //     axios.get("/api/getSession").then(res => {
-    //       console.log(res);
-    //       this.setState({ id: res.data.id, userName: res.data.userName });
-    //     });
-    //   }
-  
 
     render() { 
         console.log('props are here nav page ',this.props)
-        console.log('state are here nav page ',this.state)
+        
         return ( 
         
         <div>
@@ -34,8 +17,8 @@ class Nav extends Component {
                 <Link to='/'><button>Logout</button></Link>
             </nav>
             <div>
-                <h3>{this.state.userName}</h3>
-                <h3>{`ID No. ${this.props.id}`}</h3>
+                <h3>{this.props.userName}</h3>
+                <h3>{`ID No. ${this.props.user_id}`}</h3>
                 <img src={this.props.profilePic} alt="user" />
             </div>
         </div>
@@ -45,7 +28,7 @@ class Nav extends Component {
 
 const mapStateToProps = state => ({
     userName: state.userName,
-    id: state.id,
+    user_id: state.user_id,
     profilePic: state.profilePic
   });
   
