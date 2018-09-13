@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { connect } from "react-redux";
+// import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 class Dashboard extends Component {
@@ -8,146 +8,102 @@ class Dashboard extends Component {
     super();
 
     this.state = {
-      posts: [],
-      search: "",
-      myposts: true,
-      editing: false,
-      content: ""
+      post: "",
+      title: "",
+      allPost:[]
     };
   }
   componentDidMount = () => {
     this.getAllPosts();
   }
 
-  handleClick = (search) => {
-    this.setState({ search });
-  }
+  handleChange = (e) => {
+    this.setState({[e.target.name]: e.target.value})
+}
 
-  handleReset = () =>  {
-    this.setState({ search: "", myposts: true });
-  }
-
-  handleMyPosts = () => {
-    this.setState({ myposts: false });
-  }
-
-  handleChange = () => {
-    let { search, myposts } = this.state;
-    let { id } = this.props;
-    this.getMyPosts(id, search, myposts);
-  }
+postNewPost = (e) => {
+  e.preventDefault();
+  let {post, title} = this.state
+//  console.log("this is the post", {post, title})
+  axios.post(`/api/userPost`, { post, title }).then(res => {
+    this.setState({
+      allPost: res.data
+    })
+  })
+  .catch(err => console.log(err));
+}
 
   getAllPosts = () => {
-    axios.get(`/api/getPostUser`).then(res => {
-      this.setState({ posts: res.data });
+    axios.get("/api/getPostUser").then(res => {
+      this.setState({ allPost: res.data });
     });
   }
 
-  getMyPosts = (id, search, myposts) => {
-    axios
-      .post(`/api/userPost/${id}`, { search: search, myposts: myposts })
-      .then(res => {
-        this.setState({ posts: res.data });
-      })
-      .catch(err => console.log(err));
-  }
-
-  handleEdit = () => {
-    this.setState({ editing: true });
-  }
-  handleEditFunction = (content) => {
-    this.setState({ content });
-  }
-
-  buttonClickDelete = (id) => {
+  buttonDelete = (id) => {
     axios
       .delete(`/api/delete/?id=${id}`)
       .then(res => {
-        this.setState({ post: res.data });
+        this.setState({ allPost: res.data });
       })
+      .then(()=>this.getAllPosts())
       .catch(err => console.log(err));
   }
 
-  handleSendEdit = (title) => {
-    this.setState({ editing: false });
+  handleSendEdit = (postid) => {
+   
+    let {post} = this.state
     axios
-      .put(`/api/updatePost/${title}`, { content: this.state.content })
+      .put(`/api/updatePost/${postid}`, { post })
       .then(res => {
-        this.setState({ posts: res.data });
+        this.setState({ AllPost: res.data });
       })
+      .then(()=>this.getAllPosts())
       .catch(err => console.log(err));
   }
 
   render() {
-    let postMap = this.state.posts
-      .filter((post, i) => {
-        let { title } = post;
-        return title.includes(this.state.search);
-      })
-      .map((post, i) => {
-        let { id, title, profile_pic, img, username, content, post_id } = post;
-        return (
-          <div key={i}>
-            <div>{title}</div>
-            <img src={img} alt="" height="120" width="120" />
-            {!this.state.editing ? (
-              <p onClick={e => this.handleEdit(e)}>{content}</p>
-            ) : (
-              <input
-                onChange={e => this.handleEditFunction(e.target.value)}
-                onBlur={e => this.handleSendEdit(title)}
-              />
-            )}
-            <hr />
-            <Link to={`/post/${post_id}`}>Details</Link>
-            <br />
-            <button onClick={e => this.buttonClickDelete(id)}>Delete</button>
-
-            <br />
-            <div>{username}</div>
-            <img src={profile_pic} alt="" height="60" width="60" />
-          </div>
-        );
-      });
+console.log(this.state)
+     let {allPost} = this.state
+    let loop = allPost.map((e,i)  => {
+      return(
+        <div key={i}>
+            <div>
+              <h4>Post ID: {e.postid} || user ID: {e.user_id}</h4>
+              <h5>Title of Post</h5>
+              <h6>{e.title}</h6>         
+              <h5>Body of post</h5>
+              <h6>{e.post}</h6>
+              <input type="text" name="post" onChange={(e)=>this.handleChange(e)} />
+              <button onClick={()=>this.handleSendEdit(e.postid)}>Edit the body</button>
+              <br/>
+              <br/>
+              <Link to={`/Post/${e.postid}`}><button>MATCH PARAMS ROUTING</button></Link>
+              <br/>
+              <button onClick={()=>this.buttonDelete(e.postid)}>Delete this Crap With a query</button>
+            </div>
+            <hr/>
+        </div>
+      )
+    })
     return (
       <div>
-        
-        <input
-          onChange={e => this.handleClick(e.target.value)}
-          type="text"
-          value={this.state.search || ""}
-          placeholder="Search Posts by Title"
+        <hr/>
+        <h1>Make a new post</h1>
+        <h3>Title of post</h3>
+        <input type="text" name="title" value={this.state.title}
+        onChange={(e)=>this.handleChange(e)}
         />
-        <br />
-        <input
-          type="checkbox"
-          defaultChecked={this.state.myposts}
-          name="myPostsCB"
-          onChange={() => this.handleMyPosts()}
+        <h3>Post Body</h3>
+        <input type="text" name="post" value={this.state.post}
+        onChange={(e)=>this.handleChange(e)}
         />
-        My Posts
-        <br />
-        <br />
-        <button
-          type="search button"
-          onClick={() => this.handleClick()}
-          className="SearchButton"
-        >
-          Search My Posts
-        </button>
-        <br />
-        <button className="CancelButton" onClick={() => this.handleReset()}>
-          Reset
-        </button>
-        {postMap}
+        <button onClick={(e)=>this.postNewPost(e)}>submit</button>
+        <hr/>
+        {loop}
       </div>
     );
   }
 }
 
-const mapStateToProps = state => state;
 
-export default connect(
-  mapStateToProps,
-  null
-)(Dashboard);
+export default Dashboard;

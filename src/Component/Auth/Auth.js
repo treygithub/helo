@@ -16,7 +16,8 @@ constructor(props){
         userName: '',
         password: '',
         loggedIn: '',
-        user_id:''
+        user_id:'',
+        profilePic:''
     }
 }
 
@@ -30,7 +31,7 @@ postNewUser = () => {
     .then(res => {
         this.props.reducerID(res.data[0].user_id);
         this.props.reducerUserName(res.data[0].username);
-        this.props.reducerProfilePic(res.data[0].profilePic);
+        this.props.reducerProfilePic(res.data[0].profilepic);
       })
       .then(res => {
           this.props.history.push("/dashboard")
@@ -46,7 +47,7 @@ login = () => {
     .then(res => {
         this.props.reducerID(res.data[0].user_id);
         this.props.reducerUserName(res.data[0].username);
-        this.props.reducerProfilePic(res.data[0].profilePic);
+        this.props.reducerProfilePic(res.data[0].profilepic);
       })
       .then(res => {
           this.props.history.push("/dashboard")

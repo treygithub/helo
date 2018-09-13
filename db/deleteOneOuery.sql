@@ -1,0 +1,1 @@
+DELETE FROM postss WHERE  postid=$1

@@ -1,0 +1,1 @@
+SELECT * FROM postss WHERE user_id = $1;

@@ -20,8 +20,11 @@ function reducer(state = initialState, action) {
       };
 
     case REDUCER_PROFILE_PIC:
-      return Object.assign(state, { profilePic: action.payload });
-
+      // return Object.assign(state, { profilePic: action.payload });
+      return{
+        ...state,
+        profilePic: action.payload
+      };
     default:
       return state;
   }

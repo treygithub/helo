@@ -1,1 +1,1 @@
-INSERT INTO users(username,password) VALUES ($1,$2) RETURNING username;
+INSERT INTO users(username,password) VALUES ($1,$2) RETURNING username, profilePic, user_id;
