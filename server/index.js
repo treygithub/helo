@@ -39,6 +39,7 @@ app.delete("/api/delete", controllers.deletePost);
 app.post("/api/post/:id", controllers.OnePostMatchParamsKid);
 app.put("/api/updatePost/:postid", controllers.update);
 app.get("/api/getPostUser", controllers.getPostUser);
+app.post("/api/userPost", controllers.postByUserID);
 
 //My Error Message .Catch all the things
 app.use((req,res,next)=>{
